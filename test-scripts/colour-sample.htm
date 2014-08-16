@@ -29,12 +29,12 @@ var colour_thief;
 var images = [
 	
 	{
-		"x" : 300,
+		"x" : 800,
 		"y" : 120,
 		"asset" : "../samples/franks.jpg",
 		"inner_radius" : 5,
-		"outer_radius" : 70,
-		"radius" : 60
+		"outer_radius" : 120,
+		"radius" : 90
 	},
 	{
 		"x" : 100,
@@ -44,7 +44,9 @@ var images = [
 		"outer_radius" : 70,
 		"radius" : 60
 	}
-]
+];
+
+var sentiments = new Array();
 
 // start
 document.addEventListener("DOMContentLoaded", function() {
@@ -64,39 +66,68 @@ document.addEventListener("DOMContentLoaded", function() {
 	for(var a = 0, length = images.length; a<length; a++) {
 		
 		var image = new Image();
-		var item = images[a];
+		var data = images[a];
+
+		// check that everything is loaded then render them out
+		image.addEventListener("load", function(evt){
+			if(a>=length) draw();	
+		});
 		
-			image.addEventListener("load", function(evt){
-				
-			create_gradient(item.x,item.y,item.inner_radius, item.outer_radius, item.radius, image);
-			
-			});
-			
-			image.setAttribute("src",item.asset);
+		image.setAttribute("src",data.asset);
+		
+		// create the circle
+		var sentiment = new create_gradient(data.x,data.y,data.inner_radius, data.outer_radius, data.radius, image);			sentiments.push(sentiment);	
 	}
+	
 });
 
-function create_gradient(x,y,inner_radius, outer_radius, radius, asset) {
+// draws out all the circles
+function draw() {
+   
+    context.clearRect(0, 0, body_size.width, body_size.height);
+    for (var i = 0; i < sentiments.length; i++) {
+        var rendered_circle = sentiments[i];
+        rendered_circle.update();
+    }
+}
 
-	var colour_palette = colour_thief.getPalette(asset);
-			
-	// Create gradients
-	var gradient = context.createRadialGradient(x, y, inner_radius, x, y, outer_radius);
-	 
-	for(var a = 0, length = colour_palette.length;  a < 3; a++) {
-		var step = parseFloat(a*0.1).toFixed(1);
-		if(a===0) step = 0;
-		//gradient.addColorStop(step, 'rgb('+colour_palette[a].toString()+')');
-		gradient.addColorStop(a*0.3, 'rgb('+colour_palette[a].toString()+')');
-	}
-	 
-	gradient.addColorStop(1, 'rgba(0,0,0,0)');
+var create_gradient = function(x,y,inner_radius, outer_radius, radius, asset) {
 	
-	context.arc(x, y, radius, 0, 2 * Math.PI);
+	var self = this; 
+	
+	self.x = x,
+	self.y = y,
+	self.inner_radius = inner_radius,
+	self.outer_radius = outer_radius,
+	self.radius = radius, 
+	self.asset = asset;
+	
+	self.update = function(){
+		
+		
+		var colour_palette = colour_thief.getPalette(self.asset);
+			
+		// Create gradients
+		var gradient = context.createRadialGradient(self.x, self.y, self.inner_radius, self.x, self.y, self.outer_radius);
+		 
+		for(var a = 0, length = colour_palette.length;  a < 3; a++) {
+			var step = parseFloat(a*0.1).toFixed(1);
+			if(a===0) step = 0;
+			//gradient.addColorStop(step, 'rgb('+colour_palette[a].toString()+')');
+			gradient.addColorStop(a*0.3, 'rgb('+colour_palette[a].toString()+')');
+		}
+		 
+		gradient.addColorStop(1, 'rgba(0,0,0,0)');
+		
+		context.arc(self.x, self.y, self.radius, 0, 2 * Math.PI);
+	
+		// draw shapes
+		context.fillStyle = gradient;
+		context.fill();
 
-	// draw shapes
-	context.fillStyle = gradient;
-	context.fill();
+	}
+	
+	return self;
 }
 
 function sizing() {
