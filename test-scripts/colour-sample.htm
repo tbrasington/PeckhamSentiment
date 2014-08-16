@@ -32,17 +32,34 @@ var images = [
 		"x" : 800,
 		"y" : 120,
 		"asset" : "../samples/franks.jpg",
-		"inner_radius" : 5,
-		"outer_radius" : 120,
+		"inner_radius" : 0,
+		"outer_radius" : 170,
 		"radius" : 90
 	},
 	{
 		"x" : 100,
 		"y" : 100,
 		"asset" : "../samples/bar-story.jpg",
-		"inner_radius" : 5,
-		"outer_radius" : 70,
-		"radius" : 60
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
+	},
+	
+	{
+		"x" : 400,
+		"y" : 500,
+		"asset" : "../samples/peckham-rye.jpg",
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
+	},
+	{
+		"x" : 300,
+		"y" : 100,
+		"asset" : "../samples/brick-brewery.jpg",
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
 	}
 ];
 
@@ -61,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 	//init color theif
 	colour_thief = new ColorThief();
-	
+	var loaded = false;
 	// Load in an image and sample it
 	for(var a = 0, length = images.length; a<length; a++) {
 		
@@ -70,7 +87,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		// check that everything is loaded then render them out
 		image.addEventListener("load", function(evt){
-			if(a>=length) draw();	
+			if(a>=length && loaded === false) { 
+				draw();	
+				loaded = true;
+			}
 		});
 		
 		image.setAttribute("src",data.asset);
@@ -85,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function draw() {
    
     context.clearRect(0, 0, body_size.width, body_size.height);
+     
     for (var i = 0; i < sentiments.length; i++) {
         var rendered_circle = sentiments[i];
         rendered_circle.update();
@@ -95,39 +116,34 @@ var create_gradient = function(x,y,inner_radius, outer_radius, radius, asset) {
 	
 	var self = this; 
 	
-	self.x = x,
-	self.y = y,
-	self.inner_radius = inner_radius,
-	self.outer_radius = outer_radius,
-	self.radius = radius, 
-	self.asset = asset;
+	this.x = x,
+	this.y = y,
+	this.inner_radius = inner_radius,
+	this.outer_radius = outer_radius,
+	this.radius = radius, 
+	this.asset = asset;
+	this.colour_palette;
+	this.update = function(){
+		
+		this.colour_palette= colour_thief.getPalette(asset);
 	
-	self.update = function(){
-		
-		
-		var colour_palette = colour_thief.getPalette(self.asset);
-			
 		// Create gradients
 		var gradient = context.createRadialGradient(self.x, self.y, self.inner_radius, self.x, self.y, self.outer_radius);
+		gradient.addColorStop(0, 'rgb('+self.colour_palette[7].toString()+')');
+		gradient.addColorStop(0.5, 'rgb('+self.colour_palette[4].toString()+')');
+		gradient.addColorStop(1, 'rgb('+self.colour_palette[0].toString()+')');
+			
 		 
-		for(var a = 0, length = colour_palette.length;  a < 3; a++) {
-			var step = parseFloat(a*0.1).toFixed(1);
-			if(a===0) step = 0;
-			//gradient.addColorStop(step, 'rgb('+colour_palette[a].toString()+')');
-			gradient.addColorStop(a*0.3, 'rgb('+colour_palette[a].toString()+')');
-		}
-		 
-		gradient.addColorStop(1, 'rgba(0,0,0,0)');
-		
-		context.arc(self.x, self.y, self.radius, 0, 2 * Math.PI);
-	
 		// draw shapes
+		context.beginPath();
+		context.arc(self.x, self.y, self.radius, 0, 2 * Math.PI);
+		context.closePath();
 		context.fillStyle = gradient;
 		context.fill();
 
 	}
 	
-	return self;
+	return this;
 }
 
 function sizing() {
