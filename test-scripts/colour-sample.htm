@@ -20,6 +20,32 @@ var canvas;
 // canvas context
 var context;
 
+// size of body
+var body_size = {};
+
+// colour theif
+var colour_thief;
+
+var images = [
+	
+	{
+		"x" : 300,
+		"y" : 120,
+		"asset" : "../samples/franks.jpg",
+		"inner_radius" : 5,
+		"outer_radius" : 70,
+		"radius" : 60
+	},
+	{
+		"x" : 100,
+		"y" : 100,
+		"asset" : "../samples/bar-story.jpg",
+		"inner_radius" : 5,
+		"outer_radius" : 70,
+		"radius" : 60
+	}
+]
+
 // start
 document.addEventListener("DOMContentLoaded", function() {
       
@@ -28,52 +54,56 @@ document.addEventListener("DOMContentLoaded", function() {
 	document.body.appendChild(canvas);
 	context = canvas.getContext('2d');
 	
-	//
-	var colour_thief = new ColorThief();
+	// boom!
+	sizing();
+	
+	//init color theif
+	colour_thief = new ColorThief();
 	
 	// Load in an image and sample it
-	var image = new Image();
+	for(var a = 0, length = images.length; a<length; a++) {
 		
-		image.addEventListener("load", function(evt){
+		var image = new Image();
+		var item = images[a];
 		
-			console.log(colour_thief.getColor(image));
-			console.log(colour_thief.getPalette(image));
-	 
-			var colour_palette = colour_thief.getPalette(image);
+			image.addEventListener("load", function(evt){
+				
+			create_gradient(item.x,item.y,item.inner_radius, item.outer_radius, item.radius, image);
 			
-			 // Create gradients
-			 var radgrad = context.createRadialGradient(45,45,10,52,50,100);
-			 
-			 for(var a = 0, length = colour_palette.length;  a < 3; a++) {
-			 console.log(parseFloat(a*0.1).toFixed(1))
-			 
-			 var step = parseFloat(a*0.1).toFixed(1);
-			 if(a===0) step = 0;
+			});
 			
-			 radgrad.addColorStop(a*0.33, 'rgb('+colour_palette[a].toString()+')');
-			 	
-			
-
-			 }
-			 
-			radgrad.addColorStop(1, 'rgba(0,0,0,0)');
-			 
-			 // draw shapes
-			 context.fillStyle = radgrad;
-			 context.fillRect(0,0,150,150);
-
-		});
-		
-		
-		image.setAttribute("src","../samples/bar-story.jpg");
-		image.setAttribute("src","../samples/peckham-rye.jpg");
-		image.setAttribute("src","../samples/franks.jpg");
-		
-	
-
-  
-
+			image.setAttribute("src",item.asset);
+	}
 });
+
+function create_gradient(x,y,inner_radius, outer_radius, radius, asset) {
+
+	var colour_palette = colour_thief.getPalette(asset);
+			
+	// Create gradients
+	var gradient = context.createRadialGradient(x, y, inner_radius, x, y, outer_radius);
+	 
+	for(var a = 0, length = colour_palette.length;  a < 3; a++) {
+		var step = parseFloat(a*0.1).toFixed(1);
+		if(a===0) step = 0;
+		//gradient.addColorStop(step, 'rgb('+colour_palette[a].toString()+')');
+		gradient.addColorStop(a*0.3, 'rgb('+colour_palette[a].toString()+')');
+	}
+	 
+	gradient.addColorStop(1, 'rgba(0,0,0,0)');
+	
+	context.arc(x, y, radius, 0, 2 * Math.PI);
+
+	// draw shapes
+	context.fillStyle = gradient;
+	context.fill();
+}
+
+function sizing() {
+	body_size = document.body.getBoundingClientRect();
+	canvas.width = body_size.width;
+	canvas.height = body_size.height;	
+}
 
 
  
