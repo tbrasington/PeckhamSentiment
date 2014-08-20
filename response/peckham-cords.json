@@ -1,0 +1,53 @@
+[
+	{
+		"id" : 1,
+		"title" : "Franks and Peckham Plex",
+		"long_lat" : [51.47083, -0.06797]
+	},
+	{
+		"id" : 2,
+		"title" : "Bussey Building",
+		"long_lat" : [51.47083, -0.06678]
+	},
+	{
+		"id" : 3,
+		"title" : "Bar Story",
+		"long_lat" : [51.46952, -0.06990]
+	},
+	{
+		"id" : 4,
+		"title" : "Peckham Refreshment Rooms",
+		"long_lat" : [51.46965, -0.06922]
+	},
+	{
+		"id" : 5,
+		"title" : "Ganapati",
+		"long_lat" : [51.46967, -0.07309]
+	},
+	 
+	{
+		"id" : 6,
+		"title" : "Cafe Viva",
+		"long_lat" : [51.46803, -0.06914]
+	},
+	{
+		"id" : 7,
+		"title" : "Montpelier",
+		"long_lat" : [51.46769, -0.07041]
+	},
+	{
+		"id" : 8,
+		"title" : "Begging Bowl",
+		"long_lat" : [51.46734, -0.07256]
+	},
+	{
+		"id" : 9,
+		"title" : "Artusi",
+		"long_lat" : [51.46671, -0.07294]
+	},
+	{
+		"id" : 10,
+		"title" : "The Gowlett",
+		"long_lat" : [51.46380, -0.07056]
+	}
+]

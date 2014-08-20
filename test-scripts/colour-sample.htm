@@ -4,14 +4,22 @@
 <title>Peckham Sentiment</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-<meta name="viewport" content="width = device-width, initial-scale = 1.0 ,  minimum-scale = 1.0,  maximum-scale=1.0">
+<!-- <meta name="viewport" content="width = device-width, initial-scale = 1.0 ,  minimum-scale = 1.0,  maximum-scale=1.0"> -->
 
 <link href="base.css" type="text/css" rel="stylesheet"/>
+<style type="text/css">
+	body {
+		border:10px solid #ff624a;
+		overflow: hidden;
+		background: #e6e6e6;
+	}
+	
+</style>
 </head>
 <body>
 
 
-<script type="text/javascript" src="colour-theif.js"></script>
+<script type="text/javascript" src="colour-thief.js"></script>
 <script type="text/javascript">
 
 // create canvas
@@ -78,7 +86,9 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 	//init color theif
 	colour_thief = new ColorThief();
-	var loaded = false;
+	
+	// make sure that the loaded function only fires once
+	var all_loaded = false;
 	// Load in an image and sample it
 	for(var a = 0, length = images.length; a<length; a++) {
 		
@@ -87,9 +97,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		// check that everything is loaded then render them out
 		image.addEventListener("load", function(evt){
-			if(a>=length && loaded === false) { 
+			if(a>=length && all_loaded === false) { 
 				draw();	
-				loaded = true;
+				all_loaded = true;
 			}
 		});
 		
@@ -122,17 +132,17 @@ var create_gradient = function(x,y,inner_radius, outer_radius, radius, asset) {
 	this.outer_radius = outer_radius,
 	this.radius = radius, 
 	this.asset = asset;
-	this.colour_palette;
 	this.update = function(){
 		
-		this.colour_palette= colour_thief.getPalette(asset);
+		var prominent_colour = colour_thief.getColor(asset);
+		var colour_palette = colour_thief.getPalette(asset);
 	
 		// Create gradients
-		var gradient = context.createRadialGradient(self.x, self.y, self.inner_radius, self.x, self.y, self.outer_radius);
-		gradient.addColorStop(0, 'rgb('+self.colour_palette[7].toString()+')');
-		gradient.addColorStop(0.5, 'rgb('+self.colour_palette[4].toString()+')');
-		gradient.addColorStop(1, 'rgb('+self.colour_palette[0].toString()+')');
-			
+	//	var gradient = context.createRadialGradient(self.x, self.y, self.inner_radius, self.x, self.y, self.outer_radius);
+	var gradient = context.createLinearGradient(self.x, self.y, self.inner_radius, self.x, self.y, self.outer_radius);
+		
+		gradient.addColorStop(1, 'rgba('+prominent_colour.toString()+',1)');
+		gradient.addColorStop(0.1, 'rgba('+colour_palette[2].toString()+',1)');
 		 
 		// draw shapes
 		context.beginPath();

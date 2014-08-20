@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Peckham Sentiment &mdash; Search</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<!-- <meta name="viewport" content="width = device-width, initial-scale = 1.0 ,  minimum-scale = 1.0,  maximum-scale=1.0"> -->
+
+<link href="base.css" type="text/css" rel="stylesheet"/>
+
+<style type="text/css">
+	body {
+	}
+	
+	h1 { 
+		font-size: 62px;
+		text-align: center;
+		width: 100%;
+		height: 120px;
+		line-height: 120px;
+	}
+	
+	.image-container {
+		width: 100%;
+		height: auto;
+		margin-bottom: 20px;
+	}
+	
+	img { text-align: center;}
+</style>
+</head>
+<body>
+
+
+<script type="text/javascript" src="../helpers/utility.js"></script>
+<script type="text/javascript" src="colour-thief.js"></script>
+<script type="text/javascript">
+
+// create canvas
+var canvas; 
+
+// canvas context
+var context;
+
+// size of body
+var body_size = {};
+
+// colour theif
+var colour_thief;
+
+// our object
+var locations = {};
+
+// instagram data cache
+var search_data_callback = {}
+
+// start
+document.addEventListener("DOMContentLoaded", function() {
+      
+
+	
+	//init color theif
+	colour_thief = new ColorThief();
+	
+	//Start getting data
+	utility.ajax({
+		url : "../response/peckham-cords.json",
+		callback : function(data) {
+			locations = data; 
+			// bind each data
+			for(var a =0, length = locations.length; a<length; a++) {
+				
+				var item = locations[a];
+				
+				item.search_data = {};
+				
+				search_instagram(a, item.title, item.long_lat)
+				 
+			}
+			
+		}
+	});
+	 
+
+	function search_instagram(id, title, lat_long) {
+		
+		var safe_id = "a"+id;
+		var instagram_data = document.createElement("script");
+		instagram_data.setAttribute("type","text/javascript");
+		
+		instagram_data.addEventListener("load", function(evt){
+			
+			if(id>=locations.length-1) {
+			 	render_sample_sheet();
+		 	}
+		 	
+		});
+		
+		instagram_data.src =  "https://api.instagram.com/v1/media/search?lat="+lat_long[0]+"&lng="+lat_long[1]+"&distance=20&client_id=83c4b0937a2048568904849f3e17b434&callback=search_data_callback."+safe_id
+		
+		document.getElementsByTagName('head')[0].appendChild(instagram_data);
+		
+		search_data_callback[safe_id] = function(response) {
+		 	
+		 	var slim_data = [];
+		 	
+		 	for(var a=0, length = response.data.length; a<length; a++) {
+			 	slim_data[a] = response.data[a].images;
+		 	}
+		 	
+		 	locations[id].search_data = slim_data;
+		 	
+		 
+		 
+		}
+ 
+		document.body.appendChild(instagram_data);
+	}
+	
+});
+
+function render_sample_sheet() {
+	
+	console.log('render_sample_sheet')
+	
+	document.body.innerHTML = JSON.toString(locations);
+	console.log(locations)
+	for(var a =0, length = locations.length; a<length; a++) {
+		
+		var item = locations[a];
+
+		var h1 = utility.element("h1", {"html" : item.title});
+			document.body.appendChild(h1);
+		
+		var image_contaner = utility.element("div", {"class" : "image-container"});
+			document.body.appendChild(image_contaner);
+			
+			for(var b = 0, b_length = item.search_data.length; b<b_length; b++) {
+				
+				var image = new Image();
+					image.src = item.search_data[b].low_resolution.url;
+					
+					image_contaner.appendChild(image);
+			}
+		
+	}
+
+	
+}
+
+function sizing() {
+	body_size = document.body.getBoundingClientRect();
+	canvas.width = body_size.width;
+	canvas.height = body_size.height;	
+}
+
+
+	
+
+
+</script>
+
+</body>
+</html>
