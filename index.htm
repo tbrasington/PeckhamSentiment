@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sentiments  Peckham </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<meta name="viewport" content="width = device-width, initial-scale = 1.0 ,  minimum-scale = 1.0,  maximum-scale=1.0"> 
+
+<link href="css/base.css" type="text/css" rel="stylesheet"/>
+
+<style type="text/css">
+	body {
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+	
+	
+</style>
+</head>
+<body>
+
+
+<script type="text/javascript" src="helpers/utility.js"></script>
+<script type="text/javascript" src="helpers/colour-stepper.js"></script>
+<script type="text/javascript">
+
+var request_animation_frame =  window.requestAnimationFrame || 
+	window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    window.oRequestAnimationFram;
+    
+    
+// create canvas
+var canvas; 
+
+// canvas context
+var context;
+
+// size of body
+var body_size = {};
+
+//Store our response
+var cached_response;
+
+
+// Colours set at the beginning
+var colour_1;
+var colour_2; 
+var next_colour_1;
+var next_colour_2;
+// cycle of colours to iterate through
+var colour_1_steps;
+var colour_2_steps
+
+
+// specific area data position
+var area_position = 0;
+
+// specific photo data position
+var photo_position = 0;
+var next_photo_position = 1;
+// start
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // set up the canvas
+    canvas = document.createElement("canvas");
+	document.body.appendChild(canvas);
+	context = canvas.getContext('2d');
+	
+	
+	sizing();
+	window.addEventListener("resize", sizing);
+	
+ 	//Start getting data
+ 	
+ 	var today = new Date();
+ 	var year = today.getUTCFullYear();
+ 	var month = today.getUTCMonth()+1;
+ 	var day = today.getUTCDate();
+ 	
+ 	var file_name = year+"-"+month+"-"+day;
+	utility.ajax({
+		url : "../responses/"+file_name+".json",
+		callback : function(data) {
+		
+			cached_response = data;
+			
+			set_colors();
+   
+			draw();
+			
+		}
+	});
+	 
+});
+ 
+function sizing() {
+	body_size = document.body.getBoundingClientRect();
+	canvas.width = body_size.width;
+	canvas.height = body_size.height;	
+}
+
+
+function set_colors() {
+	
+//	console.log("set colours to " + photo_position);
+	colour_1 ='#'+ cached_response[area_position].data[photo_position].colours[0].hex;
+	colour_2 = '#'+cached_response[area_position].data[photo_position].colours[1].hex
+	
+	next_colour_1 = '#'+cached_response[area_position].data[next_photo_position].colours[0].hex;
+	next_colour_2 = '#'+cached_response[area_position].data[next_photo_position].colours[1].hex;
+	
+	colour_1_steps =getTransitionSteps(colour_1, next_colour_1, steps);
+	colour_2_steps= getTransitionSteps(colour_2,next_colour_2, steps);
+		 
+}
+
+
+var step_counter = 0;
+var steps = 500;
+
+function draw() {
+	
+	context.clearRect(0, 0, body_size.width, body_size.height);
+	
+	var size = body_size.width;
+	
+	if(body_size.width > body_size.height) {
+		size = body_size.height;
+	}
+	
+	size = size/2.5	
+  
+	// go through colours
+	colour_1=colour_1_steps[step_counter];
+	colour_2=colour_2_steps[step_counter];
+	
+	step_counter++;
+	
+	// reset steps to 0
+	if(step_counter>=steps) { 
+	
+		step_counter = 0;
+		
+		// go to the next image in an area
+		photo_position++;
+		
+		next_photo_position = next_photo_position+1;
+		
+		if(next_photo_position>=cached_response[area_position].data.length) {
+			next_photo_position=cached_response[area_position].data.length
+		}
+		
+		
+		// reset the photo position
+		if(photo_position >=cached_response[area_position].data.length) {
+		
+			photo_position=0;
+			area_position++;
+			
+			// reset the area position
+			if(area_position>=cached_response.length) {
+				
+				area_position=0;
+			}
+		}
+		
+		
+		set_colors();
+	}
+	   
+   
+   
+   var circle = create_gradient(body_size.width/2,body_size.height/2, size,colour_1,colour_2);
+   circle.update();
+   
+   request_animation_frame(draw);
+  
+  
+}
+
+var create_gradient = function(x,y, radius, colour_1,colour_2) {
+	
+	var self = this; 
+	
+	this.x = x,
+	this.y = y,
+	this.radius = radius;
+	this.update = function(){
+	
+		// Create gradients
+		var gradient = context.createLinearGradient(0,0, self.x + self.radius, 0);
+		
+		gradient.addColorStop(0, colour_1); 
+		gradient.addColorStop(1, colour_2);
+		
+		context.beginPath();
+		context.arc(self.x, self.y, self.radius, 0 , (Math.PI * 2));
+		context.closePath();
+		context.fillStyle = gradient;
+		context.fill();
+   
+	}
+	
+	return this;
+}
+</script>
+
+</body>
+</html>
