@@ -64,6 +64,17 @@ $locations = array(
 		"distance"=>0.2)
 );
 
+/*
+$locations = array(
+	0=>array(
+		"id"=>1, 
+		"title"=>"Franks and Peckham Plex", 
+		"lat"=>51.47083, 
+		"lng"=>-0.06797, 
+		"distance"=>0.2)
+	);
+*/
+
 
 /* Begin */
 
@@ -92,6 +103,8 @@ for($a=0; $a<$length; $a++) {
 		
 		$locations[$a]['data'][$b]["created"] = $returned_response["data"][$b]["created_time"];
 	//	$locations[$a]['data'][$b]["image"] = $returned_response["data"][$b]["images"]["low_resolution"]["url"];
+		
+		$locations[$a]['data'][$b]["likes"] =  ($returned_response["data"][$b]["likes"]['count'] ? $returned_response["data"][$b]["likes"]['count'] : 0);
 		
 		// copy the image temporarily
 		$image_destination = $_SERVER['DOCUMENT_ROOT']. '/samples/img_'.$b.'.jpg';

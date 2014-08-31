@@ -116,7 +116,7 @@ function set_colors() {
 
 
 var step_counter = 0;
-var steps = 500;
+var steps =500;
 
 function draw() {
 	
@@ -124,12 +124,15 @@ function draw() {
 	
 	var size = body_size.width;
 	 
+	size = ((cached_response[area_position].data[next_photo_position].likes+1) /10) * size
+   
 
 	if(body_size.width > body_size.height) {
 		size = body_size.height;
+		size = ((cached_response[area_position].data[next_photo_position].likes+1) /10) * size
 	}
-
-	size = size/2.5	
+	
+	size = size/5.5	
 
 	// go through colours
 	colour_1=colour_1_steps[step_counter];
