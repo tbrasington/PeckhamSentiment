@@ -22,6 +22,14 @@
 <script type="text/javascript" src="colour-thief.js"></script>
 <script type="text/javascript">
 
+var request_animation_frame =  window.requestAnimationFrame || 
+	window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    window.oRequestAnimationFram;
+    
+    
+    
 // create canvas
 var canvas; 
 
@@ -106,8 +114,11 @@ document.addEventListener("DOMContentLoaded", function() {
 		image.setAttribute("src",data.asset);
 		
 		// create the circle
-		var sentiment = new create_gradient(data.x,data.y,data.inner_radius, data.outer_radius, data.radius, image);			sentiments.push(sentiment);	
+		var sentiment = new create_gradient(data.x,data.y,data.inner_radius, data.outer_radius, data.radius, image);			
+		sentiments.push(sentiment);	
 	}
+	
+	
 	
 });
 

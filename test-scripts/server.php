@@ -1,4 +1,6 @@
 <?php
+include_once('colours.php');
+
 $locations = array(
 	0=>array(
 		"id"=>1, 
@@ -62,26 +64,72 @@ $locations = array(
 		"distance"=>0.2)
 );
 
+
 /* Begin */
-foreach($locations	 as $value) {
+
+// colour variable setup
+$delta = 24;
+$reduce_brightness = true;
+$reduce_gradients = true;
+$num_results = 2;
+// do the actual anaylsis 
+$ex=new GetMostCommonColors();
+		
+		
+//foreach($locations as $value) {
+$length =sizeof($locations);
+
+for($a=0; $a<$length; $a++) {
 	
+	$returned_response = search_instagram($locations[$a]['id'], $locations[$a]['lat'], $locations[$a]['lng']);
+	
+	// extract the data we need
+	$locations[$a]['data'] = array();
+	
+	$response_length = sizeof($returned_response["data"]);
+	
+	for($b=0; $b<$response_length; $b++) {
+		
+		$locations[$a]['data'][$b]["created"] = $returned_response["data"][$b]["created_time"];
+	//	$locations[$a]['data'][$b]["image"] = $returned_response["data"][$b]["images"]["low_resolution"]["url"];
+		
+		// copy the image temporarily
+		$image_destination = $_SERVER['DOCUMENT_ROOT']. '/samples/img_'.$b.'.jpg';
+		$copy_image = copy($returned_response["data"][$b]["images"]["low_resolution"]["url"], $image_destination);
+
+		
+		// get the colour sample
+		$colors = $ex->Get_Color($image_destination, $num_results, $reduce_brightness, $reduce_gradients, $delta);
+		//$locations[$a]['data'][$b]["colours"] = $colors;
+		$c=0;
+		foreach($colors as $key => $value) {
+			$locations[$a]['data'][$b]["colours"][$c]["hex"] = $key;
+			$locations[$a]['data'][$b]["colours"][$c]["weight"] = $value;
+			$c++;
+		}
+		
+		// delete the image 
+		unlink($image_destination);		
+	}
+	
+	if($a>=$length-1) {}
 }
 
+$file_name = date("Y-n-d").'.json';
+copy($_SERVER['DOCUMENT_ROOT'].'/responses/_sample.json',$_SERVER['DOCUMENT_ROOT'].'/responses/'.$file_name);
+file_put_contents($_SERVER['DOCUMENT_ROOT'].'/responses/'.$file_name, json_encode($locations));
 
-
+///
 function search_instagram($id,$lat, $lng) {
 	
-	$ch = curl_init();
-	
-	// set URL and other appropriate options
-	curl_setopt($ch, CURLOPT_URL, "https://api.instagram.com/v1/media/search?lat=".$lat."&lng=".$lng."&distance=20&client_id=83c4b0937a2048568904849f3e17b434");
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	
+ 
 	// grab URL and pass it to the browser
-	$response = curl_exec($ch);
+    $content = file_get_contents("https://api.instagram.com/v1/media/search?lat=".$lat."&lng=".$lng."&distance=20&client_id=83c4b0937a2048568904849f3e17b434");
+    
+	return json_decode($content, true);
 	
-	// close cURL resource, and free up system resources
-	curl_close($ch);
 }
+
+
 
 ?>
