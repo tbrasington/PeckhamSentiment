@@ -105,10 +105,9 @@ function sizing() {
 
 function set_colors() {
 	
-//	console.log("set colours to " + photo_position);
 	colour_1 ='#'+ cached_response[area_position].data[photo_position].colours[0].hex;
 	colour_2 = '#'+cached_response[area_position].data[photo_position].colours[1].hex
-	
+	 
 	next_colour_1 = '#'+cached_response[area_position].data[next_photo_position].colours[0].hex;
 	next_colour_2 = '#'+cached_response[area_position].data[next_photo_position].colours[1].hex;
 	
@@ -146,26 +145,30 @@ function draw() {
 		
 		// go to the next image in an area
 		photo_position++;
+		next_photo_position = photo_position+1;
 		
-		next_photo_position = next_photo_position+1;
-		
-		if(next_photo_position>=cached_response[area_position].data.length) {
-			next_photo_position=cached_response[area_position].data.length
+		if(next_photo_position>=cached_response[area_position].data.length-1) {
+			next_photo_position=photo_position-1;
 		}
 		
 		
 		// reset the photo position
-		if(photo_position >=cached_response[area_position].data.length) {
+		if(photo_position >=cached_response[area_position].data.length-1) {
 		
-			photo_position=0;
+			photo_position = 0;
+			next_photo_position=1;
 			area_position++;
 			
 			// reset the area position
-			if(area_position>=cached_response.length) {
+			if(area_position>=cached_response.length-1) {
 				
 				area_position=0;
+				photo_position=0;
+				step_counter=0;
 			}
 		}
+		
+		
 		
 		
 		set_colors();
