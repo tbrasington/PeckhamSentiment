@@ -4,16 +4,16 @@ include_once('colours.php');
 $locations = array(
 	0=>array(
 		"id"=>1, 
-		"title"=>"Franks and Peckham Plex", 
+		"title"=>"Frank's Campari Bar and Peckham Plex", 
 		"lat"=>51.47083, 
 		"lng"=>-0.06797, 
 		"distance"=>0.2),
 	1=>array(
 		"id"=>2, 
 		"title"=>"Bussey Building", 
-		"lat"=>51.47083, 
-		"lng"=> -0.06678, 
-		"distance"=>0.2),
+		"lat"=>51.51706054, 
+		"lng"=> -0.072932656, 
+		"distance"=>0.3),
 	2=>array(
 		"id"=>3, 
 		"title"=>"Bar Story", 
@@ -61,10 +61,20 @@ $locations = array(
 		"title"=>"The Gowlett", 
 		"lat"=>51.46380, 
 		"lng"=>-0.07056, 
-		"distance"=>0.2)
+		"distance"=>0.2),
+	10=>array(
+		"id"=>10, 
+		"title"=>"The Peckham Rye", 
+		"lat"=>51.46, 
+		"lng"=>-0.064, 
+		"distance"=>0.3)
 );
 
 /*
+
+latitude: 51.46,
+name: "Peckham Rye",
+longitude: -0.064,
 $locations = array(
 	0=>array(
 		"id"=>1, 
@@ -128,7 +138,7 @@ for($a=0; $a<$length; $a++) {
 	if($a>=$length-1) {}
 }
 
-$file_name = date("Y-n-d").'.json';
+$file_name = date("Y-n-j").'.json';
 copy($_SERVER['DOCUMENT_ROOT'].'/responses/_sample.json',$_SERVER['DOCUMENT_ROOT'].'/responses/'.$file_name);
 file_put_contents($_SERVER['DOCUMENT_ROOT'].'/responses/'.$file_name, json_encode($locations));
 

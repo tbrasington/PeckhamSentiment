@@ -6,15 +6,87 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 <meta name="viewport" content="width = device-width, initial-scale = 1.0 ,  minimum-scale = 1.0,  maximum-scale=1.0"> 
 
+<script type="text/javascript" src="//use.typekit.net/aen0ipw.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 <link href="css/base.css" type="text/css" rel="stylesheet"/>
 
 <style type="text/css">
-	body {
+		body {
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
 	}
 	
+	
+	#message { 
+		position: absolute;
+		width: 100%;
+		height: auto;
+	}
+	
+	#location {
+		font-family: "lust-display", serif;
+		font-size: 22px;
+		line-height: 22px;
+		letter-spacing: 0px;
+		color: #000;
+		text-align: center;
+		font-weight: 400;
+		-webkit-font-smoothing: antialiased;
+		
+		width: 100%;
+		height: auto;
+		position: relative;
+		
+	}
+	
+	#time {
+		font-family: "source-code-pro";
+		font-size: 18px;
+		line-height: 18px;
+		
+		color: #000;
+		text-align: center;
+		font-weight: 400;
+		
+		width: 100%;
+		height: auto;
+		position: relative;
+
+	}
+	
+	canvas { 
+		position: absolute;
+	}
+	
+	@media (min-width: 600px) {
+		
+		#location {
+			font-size: 32px;
+			line-height: 32px;
+		}
+		
+		#time {
+			font-size: 20px;
+			line-height: 20px;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		
+		#location {
+			font-size: 55px;
+			line-height: 55px;
+		}
+		
+		#time {
+			font-size: 27px;
+			line-height: 27px;
+		}
+	}
+
+}
+
 	
 </style>
 </head>
@@ -61,6 +133,13 @@ var area_position = 0;
 // specific photo data position
 var photo_position = 0;
 var next_photo_position = 1;
+
+// Useful elements
+var location_element;
+
+var time_element;
+
+
 // start
 document.addEventListener("DOMContentLoaded", function() {
     
@@ -70,6 +149,13 @@ document.addEventListener("DOMContentLoaded", function() {
 	context = canvas.getContext('2d');
 	
 	
+	location_element = utility.element('h1', { "id" : "location" });
+	time_element = utility.element('h2', { "id" : "time" });
+	
+	document.body.appendChild(location_element);
+	document.body.appendChild(time_element);
+
+
 	sizing();
 	window.addEventListener("resize", sizing);
 	
@@ -89,6 +175,8 @@ document.addEventListener("DOMContentLoaded", function() {
    
 			draw();
 			
+			set_date();
+			
 		}
 	});
 	 
@@ -98,6 +186,20 @@ function sizing() {
 	body_size = document.body.getBoundingClientRect();
 	canvas.width = body_size.width;
 	canvas.height = body_size.height;	
+	
+	var text_width = body_size.width*0.6;
+	if(text_width<320) { text_width = 320; }
+	
+ 	var left_pos =(body_size.width - text_width)/2;
+	location_element.style.width =  text_width+ "px"
+	time_element.style.width = text_width + "px"
+	
+	location_element.style.left = left_pos+ "px"
+	time_element.style.left = left_pos+ "px"
+	location_element.style.top = (body_size.height-(location_element.getBoundingClientRect().height + time_element.getBoundingClientRect().height ))/2 + "px";
+	
+	time_element.style.top = (body_size.height-(location_element.getBoundingClientRect().height + time_element.getBoundingClientRect().height ))/2 + "px";
+
 }
 
 
@@ -114,6 +216,35 @@ function set_colors() {
 		 
 }
 
+function set_date() {
+	
+
+ 	var date = new Date(cached_response[area_position].data[photo_position].created*1000);
+	
+	var day = date.getDate();
+	var month = (date.getMonth()+1);
+	var year =  date.getFullYear();
+	
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	
+	if(day < 10) { day = '0'+day;}
+	if(month < 10) { month = '0'+month;}
+	if(hours < 10) { hours = '0'+hours;}
+	if(minutes < 10) { minutes = '0'+minutes;}
+	
+	year = year.toString().substr(2,2);
+	
+	// will display time in 10:30:23 format
+	var formatted_time = day+""+ month +""+ year + " "  +hours + minutes + 'H';
+	
+	location_element.innerHTML = cached_response[area_position].title
+	time_element.innerHTML = formatted_time;
+ 	
+ 	
+	sizing();	
+ 	
+}
 
 var step_counter = 0;
 var steps =10;
@@ -171,6 +302,7 @@ function draw() {
 		}
 		
 		set_colors();
+		set_date();
 	}
 	
    var circle = create_gradient(body_size.width/2,body_size.height/2, size, colour_1,colour_2);

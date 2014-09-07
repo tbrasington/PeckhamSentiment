@@ -7,9 +7,9 @@
 	{
 		"id" : 2,
 		"title" : "Bussey Building",
-		"long_lat" : [51.47083, -0.06678]
+		"long_lat" : [51.51706054,  -0.072932656]
 	},
-	{
+	{		
 		"id" : 3,
 		"title" : "Bar Story",
 		"long_lat" : [51.46952, -0.06990]
@@ -49,6 +49,10 @@
 		"id" : 10,
 		"title" : "The Gowlett",
 		"long_lat" : [51.46380, -0.07056]
-	}
-]
+	},
+	{
+		"id" : 11,
+		"title" : "The Peckham Rye",
+		"long_lat" : [51.46, -0.064]
+	}]
 
