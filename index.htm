@@ -163,9 +163,8 @@ document.addEventListener("DOMContentLoaded", function() {
  	var year = today.getUTCFullYear();
  	var month = today.getUTCMonth()+1;
  	var day = today.getUTCDate();
- 	var file_name = year+"-"+month+"-"+day;
-	utility.ajax({
-		url : "responses/"+file_name+".json",
+ 	utility.ajax({
+		url : "responses/latest.json",
 		callback : function(data) {
 		
 			cached_response = data;

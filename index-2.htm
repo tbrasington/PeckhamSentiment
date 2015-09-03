@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
  	var day = today.getUTCDate();
  	var file_name = year+"-"+month+"-"+day;
 	utility.ajax({
-		url : "responses/"+file_name+".json",
+		url : "responses/latest.json",
 		callback : function(data) {
 		
 			cached_response = data;

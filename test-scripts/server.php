@@ -111,6 +111,9 @@ for($a=0; $a<$length; $a++) {
 	
 	for($b=0; $b<$response_length; $b++) {
 		
+		$locations[$a]['data'][$b]["location"]["latitude"] = $returned_response["data"][$b]["location"]["latitude"];
+		$locations[$a]['data'][$b]["location"]["longitude"] = $returned_response["data"][$b]["location"]["longitude"];
+		$locations[$a]['data'][$b]["link"] = $returned_response["data"][$b]["link"];
 		$locations[$a]['data'][$b]["created"] = $returned_response["data"][$b]["created_time"];
 	//	$locations[$a]['data'][$b]["image"] = $returned_response["data"][$b]["images"]["low_resolution"]["url"];
 		
@@ -138,7 +141,7 @@ for($a=0; $a<$length; $a++) {
 	if($a>=$length-1) {}
 }
 
-$file_name = date("Y-n-j").'.json';
+$file_name = 'latest.json';
 copy($_SERVER['DOCUMENT_ROOT'].'/responses/_sample.json',$_SERVER['DOCUMENT_ROOT'].'/responses/'.$file_name);
 file_put_contents($_SERVER['DOCUMENT_ROOT'].'/responses/'.$file_name, json_encode($locations));
 

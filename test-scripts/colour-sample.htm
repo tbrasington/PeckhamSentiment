@@ -9,9 +9,6 @@
 <link href="base.css" type="text/css" rel="stylesheet"/>
 <style type="text/css">
 	body {
-		border:10px solid #ff624a;
-		overflow: hidden;
-		background: #e6e6e6;
 	}
 	
 </style>
@@ -45,26 +42,9 @@ var colour_thief;
 var images = [
 	
 	{
-		"x" : 800,
-		"y" : 120,
-		"asset" : "../samples/franks.jpg",
-		"inner_radius" : 0,
-		"outer_radius" : 170,
-		"radius" : 90
-	},
-	{
 		"x" : 100,
 		"y" : 100,
-		"asset" : "../samples/bar-story.jpg",
-		"inner_radius" : 0,
-		"outer_radius" : 170,
-		"radius" : 90
-	},
-	
-	{
-		"x" : 400,
-		"y" : 500,
-		"asset" : "../samples/peckham-rye.jpg",
+		"asset" : "../samples/london-dusk.jpg",
 		"inner_radius" : 0,
 		"outer_radius" : 170,
 		"radius" : 90
@@ -72,7 +52,56 @@ var images = [
 	{
 		"x" : 300,
 		"y" : 100,
-		"asset" : "../samples/brick-brewery.jpg",
+		"asset" : "../samples/tower-bridge-dawn.jpg",
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
+	},
+	
+	{
+		"x" :500,
+		"y" : 100,
+		"asset" : "../samples/yorkshire-dawn.jpg",
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
+	},
+	{
+		"x" :700,
+		"y" : 100,
+		"asset" : "../samples/london-sunset.jpg",
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
+	},
+	{
+		"x" :900,
+		"y" : 100,
+		"asset" : "../samples/spring-show-space.jpg",
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
+	},
+	{
+		"x" :1100,
+		"y" : 100,
+		"asset" : "../samples/mens-show.jpg",
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
+	},
+	{
+		"x" :100,
+		"y" : 300,
+		"asset" : "../samples/james-park.jpg",
+		"inner_radius" : 0,
+		"outer_radius" : 170,
+		"radius" : 90
+	},
+	{
+		"x" :300,
+		"y" : 300,
+		"asset" : "../samples/bby-hq-sunset.jpg",
 		"inner_radius" : 0,
 		"outer_radius" : 170,
 		"radius" : 90
@@ -152,8 +181,10 @@ var create_gradient = function(x,y,inner_radius, outer_radius, radius, asset) {
 	//	var gradient = context.createRadialGradient(self.x, self.y, self.inner_radius, self.x, self.y, self.outer_radius);
 	var gradient = context.createLinearGradient(self.x, self.y, self.inner_radius, self.x, self.y, self.outer_radius);
 		
-		gradient.addColorStop(1, 'rgba('+prominent_colour.toString()+',1)');
-		gradient.addColorStop(0.1, 'rgba('+colour_palette[2].toString()+',1)');
+		//gradient.addColorStop(1, 'rgba('+prominent_colour.toString()+',1)');
+		gradient.addColorStop(0, 'rgba('+colour_palette[0].toString()+',1)');
+		gradient.addColorStop(0.05, 'rgba('+colour_palette[1].toString()+',1)');
+		 
 		 
 		// draw shapes
 		context.beginPath();
